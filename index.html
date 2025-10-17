@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Maratha Yojna Margdarshak</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-images">
+    <img src="images/aai_jijau.jpg" alt="Rajmata Jijau Saheb">
+    <img src="images/shivaji.jpg" alt="Chhatrapati Shivaji Maharaj">
+    <img src="images/sambhaji.jpg" alt="Chhatrapati Sambhaji Maharaj">
+    <img src="images/manoj_patil.jpg" alt="Manoj Jarange Patil">
+  </div>
+  <h1>Maratha Yojna Margdarshak</h1>
+  <p class="website-description">
+    ही वेबसाइट फक्त मराठा समाजातील नागरिकांसाठी आहे. येथे तुम्हाला शिक्षण, आर्थिक, आरोग्य, महिला, शेती अशा विविध सरकारी योजनांची माहिती, अर्ज प्रक्रिया आणि थेट अर्ज करण्याच्या लिंकसह मिळेल.
+  </p>
+</header>
+
+<main class="container">
+  <section class="search-bar">
+    <input id="searchInput" type="text" placeholder="योजना शोधा — शिक्षण, कर्ज, महिला, आरोग्य"/>
+    <select id="filterCategory">
+      <option value="all">सर्व श्रेणी</option>
+      <option value="education">शिक्षण</option>
+      <option value="financial">आर्थिक</option>
+      <option value="health">आरोग्य</option>
+      <option value="agriculture">शेती</option>
+      <option value="women">महिला</option>
+      <option value="housing">घरकुल</option>
+    </select>
+  </section>
+
+  <section id="schemesGrid" class="schemes-grid"></section>
+</main>
+
+<div id="modalOverlay" class="modal-overlay hidden">
+  <div class="modal large">
+    <button id="modalClose" class="modal-close">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Maratha Yojna Margdarshak | जय भवानी जय शिवाजी 🚩</p>
+  <p class="credit">💻 Developed by <span>Parth Ashokrao Hoke Patil</span></p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
