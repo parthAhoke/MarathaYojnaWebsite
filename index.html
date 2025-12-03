@@ -3,28 +3,57 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="मराठा योजना मार्गदर्शक - शिक्षण, आर्थिक, आरोग्य, शेती योजनांची संपूर्ण माहिती" />
+<meta name="theme-color" content="#e65100" />
 <title>Maratha Yojna Margdarshak</title>
 <link rel="stylesheet" href="style.css" />
+<link rel="manifest" href="manifest.json" />
 </head>
 <body>
 
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="loading-spinner hidden">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
+
 <header>
+  <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode" title="Toggle Dark Mode">
+    <span class="icon-sun">☀️</span>
+    <span class="icon-moon hidden">🌙</span>
+  </button>
   <div class="header-images">
     <img src="images/aai_jijau.jpg" alt="Rajmata Jijau Saheb">
     <img src="images/shivaji.jpg" alt="Chhatrapati Shivaji Maharaj">
     <img src="images/sambhaji.jpg" alt="Chhatrapati Sambhaji Maharaj">
     <img src="images/manoj_patil.jpg" alt="Manoj Jarange Patil">
   </div>
-  <h1>Maratha Yojna Margdarshak</h1>
+  <h1>मराठा योजना मार्गदर्शक</h1>
   <p class="website-description">
-    ही वेबसाइट फक्त मराठा समाजातील नागरिकांसाठी आहे. येथे तुम्हाला शिक्षण, आर्थिक, आरोग्य, महिला, शेती अशा विविध सरकारी योजनांची माहिती, अर्ज प्रक्रिया आणि थेट अर्ज करण्याच्या लिंकसह मिळेल.
+     येथे तुम्हाला शिक्षण, आर्थिक, आरोग्य, महिला, शेती अशा विविध सरकारी योजनांची माहिती, अर्ज प्रक्रिया आणि थेट अर्ज करण्याच्या लिंकसह मिळेल.
   </p>
 </header>
 
 <main class="container">
+  <!-- Statistics Counter -->
+  <section class="stats-section">
+    <div class="stat-card">
+      <span class="stat-number" id="totalSchemes">0</span>
+      <span class="stat-label">एकूण योजना</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number" id="totalCategories">6</span>
+      <span class="stat-label">श्रेणी</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number" id="favoriteCount">0</span>
+      <span class="stat-label">Favorites ❤️</span>
+    </div>
+  </section>
+
   <section class="search-bar">
-    <input id="searchInput" type="text" placeholder="योजना शोधा — शिक्षण, कर्ज, महिला, आरोग्य"/>
-    <select id="filterCategory">
+    <input id="searchInput" type="text" placeholder="योजना शोधा — शिक्षण, कर्ज, महिला, आरोग्य" aria-label="Search schemes"/>
+    <select id="filterCategory" aria-label="Filter by category">
       <option value="all">सर्व श्रेणी</option>
       <option value="education">शिक्षण</option>
       <option value="financial">आर्थिक</option>
@@ -33,9 +62,18 @@
       <option value="women">महिला</option>
       <option value="housing">घरकुल</option>
     </select>
+    <select id="sortBy" aria-label="Sort schemes">
+      <option value="default">क्रमवारी: Default</option>
+      <option value="name-asc">नाव (A-Z)</option>
+      <option value="name-desc">नाव (Z-A)</option>
+      <option value="category">श्रेणी</option>
+    </select>
+    <button id="showFavoritesBtn" class="filter-btn" aria-label="Show favorites" title="Show Favorites Only">
+      ❤️ Favorites
+    </button>
   </section>
 
-  <section id="schemesGrid" class="schemes-grid"></section>
+  <section id="schemesGrid" class="schemes-grid" role="main" aria-live="polite"></section>
 </main>
 
 <div id="modalOverlay" class="modal-overlay hidden">
@@ -45,9 +83,17 @@
   </div>
 </div>
 
+<!-- Back to Top Button -->
+<button id="backToTop" class="back-to-top hidden" aria-label="Back to top" title="Back to Top">
+  ↑
+</button>
+
 <footer>
   <p>© 2025 Maratha Yojna Margdarshak | जय भवानी जय शिवाजी 🚩</p>
-  <p class="credit">💻 Developed by <span>Parth Ashokrao Hoke Patil</span></p>
+  <p class="credit">💻 Developed by <span class="dev-name">Parth Ashokrao Hoke Patil</span></p>
+  <div class="footer-links">
+    <a href="#" id="installBtn" class="install-btn hidden">📱 Install App</a>
+  </div>
 </footer>
 
 <script src="script.js"></script>
