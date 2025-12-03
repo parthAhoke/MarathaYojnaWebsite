@@ -1,0 +1,16 @@
+{
+  "name": "maratha-yojna-margdarshak",
+  "version": "1.0.0",
+  "description": "मराठा योजना मार्गदर्शक - Government Schemes Information Portal",
+  "scripts": {
+    "start": "python -m http.server 8000 || python3 -m http.server 8000"
+  },
+  "keywords": [
+    "maratha",
+    "government-schemes",
+    "pwa",
+    "static-site"
+  ],
+  "author": "Parth Ashokrao Hoke Patil",
+  "license": "MIT"
+}
