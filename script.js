@@ -4,6 +4,147 @@
 let favorites = JSON.parse(localStorage.getItem('marathaFavorites')) || [];
 let showOnlyFavorites = false;
 let currentSort = 'default';
+let currentLanguage = localStorage.getItem('preferredLanguage') || 'mr';
+let currentBeneficiaryType = 'all';
+
+// ========== TRANSLATIONS ==========
+const translations = {
+  mr: {
+    headerTitle: "मराठा योजना मार्गदर्शक",
+    headerDescription: "येथे तुम्हाला शिक्षण, आर्थिक, आरोग्य, महिला, शेती अशा विविध सरकारी योजनांची माहिती, अर्ज प्रक्रिया आणि थेट अर्ज करण्याच्या लिंकसह मिळेल.",
+    statLabel1: "एकूण योजना",
+    statLabel2: "श्रेणी",
+    statLabel3: "Favorites ❤️",
+    beneficiaryAll: "🌐 सर्व",
+    beneficiaryStudent: "🎓 विद्यार्थी",
+    beneficiaryFarmer: "🌾 शेतकरी",
+    beneficiaryWomen: "👩 महिला",
+    beneficiaryYouth: "💼 युवा",
+    beneficiarySenior: "👴 ज्येष्ठ नागरिक",
+    searchPlaceholder: "योजना शोधा — शिक्षण, कर्ज, महिला, आरोग्य",
+    catAll: "सर्व श्रेणी",
+    catEducation: "शिक्षण",
+    catFinancial: "आर्थिक",
+    catHealth: "आरोग्य",
+    catAgriculture: "शेती",
+    catWomen: "महिला",
+    catHousing: "घरकुल",
+    sortDefault: "क्रमवारी: Default",
+    sortNameAsc: "नाव (A-Z)",
+    sortNameDesc: "नाव (Z-A)",
+    sortCategory: "श्रेणी",
+    showFavorites: "❤️ Favorites",
+    showAll: "📋 Show All",
+    helplineTitle: "📞 महत्त्वाचे हेल्पलाईन नंबर",
+    footerText1: "© 2025 Maratha Yojna Margdarshak | जय भवानी जय शिवाजी 🚩",
+    footerText2: "💻 Developed by ",
+    noResults: "😔 कोणतीही योजना सापडली नाही",
+    tryAgain: "कृपया दुसरा शोध प्रयत्न करा"
+  },
+  hi: {
+    headerTitle: "मराठा योजना मार्गदर्शक",
+    headerDescription: "यहां आपको शिक्षा, वित्तीय, स्वास्थ्य, महिला, कृषि जैसी विभिन्न सरकारी योजनाओं की जानकारी, आवेदन प्रक्रिया और सीधे आवेदन करने के लिंक मिलेंगे।",
+    statLabel1: "कुल योजनाएं",
+    statLabel2: "श्रेणियां",
+    statLabel3: "पसंदीदा ❤️",
+    beneficiaryAll: "🌐 सभी",
+    beneficiaryStudent: "🎓 विद्यार्थी",
+    beneficiaryFarmer: "🌾 किसान",
+    beneficiaryWomen: "👩 महिला",
+    beneficiaryYouth: "💼 युवा",
+    beneficiarySenior: "👴 वरिष्ठ नागरिक",
+    searchPlaceholder: "योजना खोजें — शिक्षा, ऋण, महिला, स्वास्थ्य",
+    catAll: "सभी श्रेणियां",
+    catEducation: "शिक्षा",
+    catFinancial: "वित्तीय",
+    catHealth: "स्वास्थ्य",
+    catAgriculture: "कृषि",
+    catWomen: "महिला",
+    catHousing: "आवास",
+    sortDefault: "क्रम: डिफ़ॉल्ट",
+    sortNameAsc: "नाम (A-Z)",
+    sortNameDesc: "नाम (Z-A)",
+    sortCategory: "श्रेणी",
+    showFavorites: "❤️ पसंदीदा",
+    showAll: "📋 सभी दिखाएं",
+    helplineTitle: "📞 महत्वपूर्ण हेल्पलाइन नंबर",
+    footerText1: "© 2025 मराठा योजना मार्गदर्शक | जय भवानी जय शिवाजी 🚩",
+    footerText2: "💻 विकसित किया ",
+    noResults: "😔 कोई योजना नहीं मिली",
+    tryAgain: "कृपया दूसरी खोज का प्रयास करें"
+  },
+  en: {
+    headerTitle: "Maratha Scheme Guide",
+    headerDescription: "Find information about various government schemes for education, financial aid, health, women, agriculture with application process and direct links.",
+    statLabel1: "Total Schemes",
+    statLabel2: "Categories",
+    statLabel3: "Favorites ❤️",
+    beneficiaryAll: "🌐 All",
+    beneficiaryStudent: "🎓 Students",
+    beneficiaryFarmer: "🌾 Farmers",
+    beneficiaryWomen: "👩 Women",
+    beneficiaryYouth: "💼 Youth",
+    beneficiarySenior: "👴 Senior Citizens",
+    searchPlaceholder: "Search schemes — Education, Loan, Women, Health",
+    catAll: "All Categories",
+    catEducation: "Education",
+    catFinancial: "Financial",
+    catHealth: "Health",
+    catAgriculture: "Agriculture",
+    catWomen: "Women",
+    catHousing: "Housing",
+    sortDefault: "Sort: Default",
+    sortNameAsc: "Name (A-Z)",
+    sortNameDesc: "Name (Z-A)",
+    sortCategory: "Category",
+    showFavorites: "❤️ Favorites",
+    showAll: "📋 Show All",
+    helplineTitle: "📞 Important Helpline Numbers",
+    footerText1: "© 2025 Maratha Scheme Guide | Jai Bhavani Jai Shivaji 🚩",
+    footerText2: "💻 Developed by ",
+    noResults: "😔 No schemes found",
+    tryAgain: "Please try another search"
+  }
+};
+
+// Update UI language
+function updateLanguage(lang) {
+  currentLanguage = lang;
+  localStorage.setItem('preferredLanguage', lang);
+  const t = translations[lang];
+  
+  // Update all text elements
+  document.getElementById('headerTitle').textContent = t.headerTitle;
+  document.getElementById('headerDescription').textContent = t.headerDescription;
+  document.getElementById('statLabel1').textContent = t.statLabel1;
+  document.getElementById('statLabel2').textContent = t.statLabel2;
+  document.getElementById('statLabel3').textContent = t.statLabel3;
+  document.getElementById('beneficiaryAll').textContent = t.beneficiaryAll;
+  document.getElementById('beneficiaryStudent').textContent = t.beneficiaryStudent;
+  document.getElementById('beneficiaryFarmer').textContent = t.beneficiaryFarmer;
+  document.getElementById('beneficiaryWomen').textContent = t.beneficiaryWomen;
+  document.getElementById('beneficiaryYouth').textContent = t.beneficiaryYouth;
+  document.getElementById('beneficiarySenior').textContent = t.beneficiarySenior;
+  document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+  document.getElementById('catAll').textContent = t.catAll;
+  document.getElementById('catEducation').textContent = t.catEducation;
+  document.getElementById('catFinancial').textContent = t.catFinancial;
+  document.getElementById('catHealth').textContent = t.catHealth;
+  document.getElementById('catAgriculture').textContent = t.catAgriculture;
+  document.getElementById('catWomen').textContent = t.catWomen;
+  document.getElementById('catHousing').textContent = t.catHousing;
+  document.getElementById('sortDefault').textContent = t.sortDefault;
+  document.getElementById('sortNameAsc').textContent = t.sortNameAsc;
+  document.getElementById('sortNameDesc').textContent = t.sortNameDesc;
+  document.getElementById('sortCategory').textContent = t.sortCategory;
+  document.getElementById('helplineTitle').textContent = t.helplineTitle;
+  document.getElementById('footerText1').textContent = t.footerText1;
+  
+  const favBtn = document.getElementById('showFavoritesBtn');
+  if (favBtn) {
+    favBtn.textContent = showOnlyFavorites ? t.showAll : t.showFavorites;
+  }
+}
 
 // Dark Mode
 function initDarkMode() {
@@ -25,6 +166,7 @@ const schemes = [
     amount: "Varies (loan / subsidy)",
     link: "https://mahaswayamrojgar.maharashtra.gov.in/",
     category: "financial",
+    beneficiaryTypes: ["youth"],
     guide: [
       "साइट उघडा आणि 'New User / Register' करा.",
       "Aadhaar व bank details तयार ठेवा.",
@@ -39,6 +181,7 @@ const schemes = [
     amount: "Varies",
     link: "https://msobcfdc.in/",
     category: "financial",
+    beneficiaryTypes: ["youth"],
     guide: [
       "साइट उघडा किंवा MahaDBT तपासा.",
       "रजिस्टर करा, अर्ज भरा आणि कागदपत्रे अपलोड करा."
@@ -50,8 +193,9 @@ const schemes = [
     description: "प्रशिक्षण, संशोधन आणि मानव विकासासाठी सहाय्य (Maharashtra).",
     eligibility: "Maratha समाजातील युवक/महिला (प्रोग्रामनुसार खुला असू शकतो)",
     amount: "Training / Scholarship / Support",
-    link: "https://www.sarthi-maharashtragov.in/",
+    link: "https://sarthi.maharashtra.gov.in/",
     category: "education",
+    beneficiaryTypes: ["student", "youth", "women"],
     guide: [
       "SARTHI ची वेबसाईट उघडा.",
       "प्रशिक्षण/शिष्यवृत्ती साठी अर्ज भरा.",
@@ -66,6 +210,7 @@ const schemes = [
     amount: "Varies",
     link: "https://mahadbt.maharashtra.gov.in/",
     category: "education",
+    beneficiaryTypes: ["student"],
     guide: [
       "MahaDBT पोर्टल उघडा.",
       "रजिस्टर करा / लॉगिन करा.",
@@ -91,7 +236,7 @@ const schemes = [
     description: "निवास/अन्न/शिक्षणासाठी सहाय्य (vulnerable students).",
     eligibility: "लागू वर्ग (Maharashtra DBT details)",
     amount: "Varies",
-    link: "https://www.mahadbtmaharashtra.org/swadhar-yojana-form-eligibility-documents-benefits/",
+    link: "https://labour.maharashtra.gov.in/",
     category: "education",
     guide: [
       "स्वाधार लिंक वाचून अर्ज भरा.",
@@ -104,7 +249,7 @@ const schemes = [
     description: "MHADA मार्फत घरकुल लाटरी / घर योजना (Maharashtra).",
     eligibility: "राज्यातील पात्र नागरिक",
     amount: "Varies (project-specific)",
-    link: "https://www.mhada.gov.in/en",
+    link: "https://www.mhada.gov.in/",
     category: "housing",
     guide: [
       "MHADA पोर्टल उघडा.",
@@ -117,7 +262,7 @@ const schemes = [
     description: "उद्योग/उद्योजकता साठी मार्गदर्शन व कर्ज सहाय्य.",
     eligibility: "उद्योजक / Maratha युवक/महिला",
     amount: "Varies (loan / subsidy)",
-    link: "https://maha-cmegp.gov.in/onlineapplication",
+    link: "https://cmegp.org.in/",
     category: "financial",
     guide: [
       "CMEGP पोर्टल उघडा आणि नवीन रजिस्ट्रेशन करा.",
@@ -130,7 +275,7 @@ const schemes = [
     description: "गरीब / मध्यम गटांसाठी घरकुल अनुदान (PMAY-U / PMAY-G).",
     eligibility: "आर्थिकदृष्ट्या पात्र नागरिक",
     amount: "CLSS interest subsidy व अनुदान (Varies)",
-    link: "https://pmaymis.gov.in/",
+    link: "https://pmay-urban.gov.in/",
     category: "housing",
     guide: [
       "PMAY साइट उघडा (Citizen Assessment).",
@@ -143,7 +288,7 @@ const schemes = [
     description: "मोफत कौशल्य प्रशिक्षण आणि प्रमाणपत्र.",
     eligibility: "सर्व युवक/युवती",
     amount: "Training & Certification",
-    link: "https://www.msde.gov.in/offerings/schemes-and-services/details/pradhan-mantri-kaushal-vikas-yojana-4-0-pmkvy-4-0-2021-ITO3ATMtQWa",
+    link: "https://www.skillindiadigital.gov.in/",
     category: "education",
     guide: [
       "PMKVY / Skill India पोर्टल उघडा.",
@@ -171,6 +316,7 @@ const schemes = [
     amount: "₹6,000/वर्ष (3 हिशेबात)",
     link: "https://pmkisan.gov.in/",
     category: "agriculture",
+    beneficiaryTypes: ["farmer"],
     guide: [
       "PMKISAN पोर्टलवर Self-Register करा किंवा जिल्हा कृषी विभागाकडून नोंदणी करा.",
       "आवश्यक कागदपत्रे आणि जमीन माहिती जोडा."
@@ -184,6 +330,7 @@ const schemes = [
     amount: "Varies by bank",
     link: "https://www.rbi.org.in/",
     category: "agriculture",
+    beneficiaryTypes: ["farmer"],
     guide: [
       "नजीकच्या बँकेच्या कृषि शाखेशी संपर्क करा.",
       "आवश्यक KYC आणि जमीन कागदपत्रे द्या."
@@ -197,6 +344,7 @@ const schemes = [
     amount: "Varies",
     link: "https://mahadbt.maharashtra.gov.in/",
     category: "women",
+    beneficiaryTypes: ["women"],
     guide: [
       "MahaDBT वर लॉगिन करा/रजिस्टर करा.",
       "कन्या सहाय्य अर्ज भरा व कागदपत्रे अपलोड करा."
@@ -208,15 +356,364 @@ const schemes = [
     description: "गर्भवती महिलांसाठी आर्थिक सहाय्य (state portal).",
     eligibility: "गर्भवती महिला",
     amount: "₹5,000-₹10,000",
-    link: "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=4021",
+    link: "https://aaplesarkar.mahaonline.gov.in/",
     category: "health",
     guide: [
       "सरकारी लिंक उघडा",
       "अर्ज भरा व कागदपत्रे अपलोड करा"
     ],
     documents: ["गर्भवतीचे प्रमाणपत्र", "आधार", "बँक तपशील"]
+  },
+  {
+    name: "प्रधानमंत्री मुद्रा योजना (MUDRA)",
+    description: "लघु व्यवसायांसाठी कर्ज (शिशु, किशोर, तरुण श्रेणी).",
+    eligibility: "लघु व्यवसायी, उद्योजक",
+    amount: "₹50,000 - ₹10 लाख",
+    link: "https://www.mudra.org.in/",
+    category: "financial",
+    guide: [
+      "नजिकच्या बँकेत जा किंवा MUDRA पोर्टल उघडा.",
+      "व्यवसाय योजना आणि KYC कागदपत्रे सबमिट करा.",
+      "कर्ज मंजूर झाल्यावर व्यवसाय सुरू करा."
+    ],
+    documents: ["आधार", "पॅन कार्ड", "व्यवसाय योजना", "बँक स्टेटमेंट"]
+  },
+  {
+    name: "आयुष्मान भारत - महात्मा ज्योतिबा फुले जन आरोग्य योजना",
+    description: "गरीब कुटुंबांसाठी ₹5 लाख पर्यंत मोफत आरोग्य विमा.",
+    eligibility: "पात्र गरीब कुटुंब (SECC यादी)",
+    amount: "₹5 लाख वार्षिक कवरेज",
+    link: "https://jeevandayee.gov.in/",
+    category: "health",
+    guide: [
+      "जिल्हा रुग्णालय किंवा आरोग्य केंद्रात जा.",
+      "MJPJAY कार्ड साठी अर्ज भरा.",
+      "आधार व राशन कार्ड द्या."
+    ],
+    documents: ["आधार", "राशन कार्ड", "उत्पन्न प्रमाणपत्र"]
+  },
+  {
+    name: "लेक लाडकी योजना (Maharashtra)",
+    description: "मुलींच्या शिक्षण व विकासासाठी आर्थिक सहाय्य.",
+    eligibility: "महाराष्ट्रातील मुली",
+    amount: "₹75,000 (वेगवेगळ्या टप्प्यात)",
+    link: "https://womenchild.maharashtra.gov.in/",
+    category: "women",
+    guide: [
+      "MahaDBT पोर्टल उघडा.",
+      "लेक लाडकी योजना शोधा व अर्ज भरा.",
+      "आवश्यक कागदपत्रे अपलोड करा."
+    ],
+    documents: ["जन्म दाखला", "आधार", "बँक पासबुक", "उत्पन्न प्रमाणपत्र"]
+  },
+  {
+    name: "प्रधानमंत्री फसल बीमा योजना (PMFBY)",
+    description: "नैसर्गिक आपत्ती पासून पीक संरक्षण बीमा.",
+    eligibility: "सर्व शेतकरी",
+    amount: "Varies (पीक मूल्यानुसार)",
+    link: "https://pmfby.gov.in/",
+    category: "agriculture",
+    guide: [
+      "PMFBY पोर्टल उघडा.",
+      "Farmer Application करा.",
+      "जमीन व पीक तपशील भरा."
+    ],
+    documents: ["आधार", "जमीन दस्तऐवज", "बँक खाते", "पीक तपशील"]
+  },
+  {
+    name: "प्रधानमंत्री श्रम योगी मानधन पेन्शन योजना",
+    description: "असंघटित कामगारांसाठी पेन्शन योजना.",
+    eligibility: "18-40 वर्षे, असंघटित कामगार",
+    amount: "₹3,000/महिना (60 वर्षानंतर)",
+    link: "https://maandhan.in/shramyogi",
+    category: "financial",
+    guide: [
+      "CSC किंवा ऑनलाइन रजिस्टर करा.",
+      "आधार व बँक तपशील द्या.",
+      "मासिक योगदान भरा."
+    ],
+    documents: ["आधार", "बँक पासबुक", "मोबाईल नंबर"]
+  },
+  {
+    name: "सुकन्या समृद्धी योजना",
+    description: "मुलींच्या भविष्यासाठी बचत खाते (उच्च व्याज).",
+    eligibility: "10 वर्षाखालील मुली",
+    amount: "सध्या 8.2% व्याज दर",
+    link: "https://nsi.gov.in/",
+    category: "women",
+    guide: [
+      "पोस्ट ऑफिस किंवा बँकेत जा.",
+      "सुकन्या समृद्धी फॉर्म भरा.",
+      "किमान ₹250 जमा करा."
+    ],
+    documents: ["मुलीचा जन्म दाखला", "पालकांचा आधार", "फोटो"]
+  },
+  {
+    name: "अटल पेन्शन योजना (APY)",
+    description: "60 वर्षानंतर हमी पेन्शन (₹1,000 - ₹5,000).",
+    eligibility: "18-40 वर्षे भारतीय नागरिक",
+    amount: "₹1,000-₹5,000/महिना",
+    link: "https://npscra.nsdl.co.in/atal-pension-yojana.php",
+    category: "financial",
+    guide: [
+      "बँकेत APY खाते उघडा.",
+      "मासिक योगदान निवडा.",
+      "Auto-debit सेटअप करा."
+    ],
+    documents: ["आधार", "बँक खाते", "मोबाईल नंबर"]
+  },
+  {
+    name: "राष्ट्रीय शिक्षण योजना (NSP)",
+    description: "विविध शिष्यवृत्त्या एकाच पोर्टलवर (Pre-Matric, Post-Matric).",
+    eligibility: "विद्यार्थी (वर्ग 1-12, पदवी, पदव्युत्तर)",
+    amount: "Varies",
+    link: "https://scholarships.gov.in/",
+    category: "education",
+    guide: [
+      "NSP पोर्टल उघडा.",
+      "नवीन नोंदणी करा.",
+      "योग्य शिष्यवृत्ती निवडा व अर्ज भरा."
+    ],
+    documents: ["आधार", "मार्कशीट", "उत्पन्न प्रमाणपत्र", "बँक तपशील"]
+  },
+  {
+    name: "स्टँड अप इंडिया योजना",
+    description: "SC/ST/महिला उद्योजकांसाठी कर्ज (₹10 लाख - ₹1 कोटी).",
+    eligibility: "SC/ST/महिला उद्योजक",
+    amount: "₹10 लाख - ₹1 कोटी",
+    link: "https://standupmitra.in/",
+    category: "financial",
+    guide: [
+      "Stand Up Mitra पोर्टल उघडा.",
+      "व्यवसाय योजना तयार करा.",
+      "बँकेत कर्ज अर्ज सबमिट करा."
+    ],
+    documents: ["आधार", "जात प्रमाणपत्र", "व्यवसाय योजना", "बँक स्टेटमेंट"]
+  },
+  {
+    name: "मुख्यमंत्री सौर कृषी पंप योजना",
+    description: "शेतकऱ्यांसाठी सौर ऊर्जा पंप (90% अनुदान).",
+    eligibility: "महाराष्ट्रातील शेतकरी",
+    amount: "90% अनुदान",
+    link: "https://msedcl.mahadiscom.in/",
+    category: "agriculture",
+    guide: [
+      "MSEDCL पोर्टल उघडा.",
+      "सौर पंप योजना अर्ज भरा.",
+      "7/12 आणि जमीन कागदपत्रे अपलोड करा."
+    ],
+    documents: ["आधार", "7/12 उतारा", "8अ", "बँक पासबुक"]
+  },
+  {
+    name: "राष्ट्रीय ग्रामीण आजीविका मिशन (NRLM)",
+    description: "ग्रामीण गरीबांसाठी स्वयंसहाय्यता गट व कर्ज.",
+    eligibility: "ग्रामीण महिला/कुटुंब",
+    amount: "Varies (गट आधारित)",
+    link: "https://aajeevika.gov.in/",
+    category: "financial",
+    guide: [
+      "नजिकच्या SHG ला संपर्क करा.",
+      "गट सदस्यत्व घ्या.",
+      "बँक लिंकेज व कर्ज मिळवा."
+    ],
+    documents: ["आधार", "बँक पासबुक", "उत्पन्न प्रमाणपत्र"]
+  },
+  {
+    name: "प्रधानमंत्री उज्ज्वला योजना",
+    description: "गरीब महिलांसाठी मोफत LPG कनेक्शन.",
+    eligibility: "BPL कुटुंबातील महिला",
+    amount: "मोफत कनेक्शन + ₹1,600 मदत",
+    link: "https://pmuy.gov.in/",
+    category: "women",
+    guide: [
+      "नजिकच्या LPG वितरकाला भेटा.",
+      "PMUY अर्ज फॉर्म भरा.",
+      "BPL कार्ड व आधार द्या."
+    ],
+    documents: ["आधार", "BPL कार्ड", "फोटो", "पत्ता पुरावा"]
+  },
+  {
+    name: "महाराष्ट्र राज्य विकलांग वित्त व विकास महामंडळ",
+    description: "दिव्यांग व्यक्तींसाठी स्वरोजगार/कर्ज/प्रशिक्षण.",
+    eligibility: "40% किंवा अधिक अपंगत्व प्रमाणपत्र",
+    amount: "Varies",
+    link: "https://mahahandicapped.in/",
+    category: "financial",
+    guide: [
+      "महामंडळाची वेबसाइट उघडा.",
+      "दिव्यांग प्रमाणपत्र सोबत अर्ज भरा.",
+      "कर्ज/प्रशिक्षण योजना निवडा."
+    ],
+    documents: ["आधार", "दिव्यांग प्रमाणपत्र", "उत्पन्न प्रमाणपत्र", "बँक तपशील"]
+  },
+  {
+    name: "नानाजी देशमुख कृषी संजीवनी योजना",
+    description: "शेतकऱ्यांसाठी जलसंधारण व सिंचन प्रकल्प.",
+    eligibility: "महाराष्ट्रातील शेतकरी",
+    amount: "प्रकल्प आधारित अनुदान",
+    link: "https://pjms.maharashtra.gov.in/",
+    category: "agriculture",
+    guide: [
+      "जिल्हा कृषि अधिकाऱ्यांना भेटा.",
+      "प्रकल्प प्रस्ताव सबमिट करा.",
+      "मंजूरी मिळाल्यावर काम सुरू करा."
+    ],
+    documents: ["आधार", "जमीन दस्तऐवज", "7/12", "8अ"]
+  },
+  {
+    name: "प्रधानमंत्री ग्रामीण आवास योजना (PMAY-G)",
+    description: "ग्रामीण भागातील गरीब कुटुंबांना घर बांधण्यासाठी मदत.",
+    eligibility: "ग्रामीण गरीब कुटुंब",
+    amount: "₹1.20 लाख (मैदानी), ₹1.30 लाख (डोंगराळ)",
+    link: "https://pmayg.nic.in/",
+    category: "housing",
+    guide: [
+      "ग्रामपंचायत/तलाठी यांना संपर्क करा.",
+      "SECC यादीत नाव तपासा.",
+      "अर्ज प्रक्रिया पूर्ण करा."
+    ],
+    documents: ["आधार", "बँक पासबुक", "SECC यादी"]
+  },
+  {
+    name: "महात्मा गांधी राष्ट्रीय ग्रामीण रोजगार हमी योजना (MGNREGA)",
+    description: "ग्रामीण भागात 100 दिवसांची हमी रोजगार.",
+    eligibility: "ग्रामीण अकुशल कामगार",
+    amount: "राज्यानुसार दररोज वेतन",
+    link: "https://nrega.nic.in/",
+    category: "financial",
+    guide: [
+      "ग्रामपंचायतीत Job Card साठी अर्ज करा.",
+      "कामासाठी मागणी नोंदवा.",
+      "काम मिळाल्यावर हजेरी लावा."
+    ],
+    documents: ["आधार", "फोटो", "बँक पासबुक"]
+  },
+  {
+    name: "महाराष्ट्र शासन लेक लाडकी योजना (MLLY)",
+    description: "मुलींसाठी शैक्षणिक प्रोत्साहन व आर्थिक मदत.",
+    eligibility: "पिवळे-केशरी राशन कार्ड धारक कुटुंबातील मुली",
+    amount: "₹75,000 (वेगवेगळ्या टप्प्यात)",
+    link: "https://womenchild.maharashtra.gov.in/",
+    category: "women",
+    guide: [
+      "MahaDBT पोर्टल उघडा.",
+      "MLLY अर्ज फॉर्म भरा.",
+      "राशन कार्ड व बँक तपशील अपलोड करा."
+    ],
+    documents: ["जन्म दाखला", "राशन कार्ड", "आधार", "बँक पासबुक"]
+  },
+  {
+    name: "डिजिटल इंडिया - Common Service Centers (CSC)",
+    description: "सरकारी सेवा डिजिटल माध्यमातून (CSC द्वारे).",
+    eligibility: "सर्व नागरिक",
+    amount: "सेवा आधारित शुल्क",
+    link: "https://www.csc.gov.in/",
+    category: "education",
+    guide: [
+      "नजिकच्या CSC केंद्रात जा.",
+      "आवश्यक सेवा निवडा (PAN, Aadhaar, etc.).",
+      "कागदपत्रे द्या व फॉर्म भरा."
+    ],
+    documents: ["संबंधित सेवेसाठी आवश्यक कागदपत्रे"]
+  },
+  {
+    name: "राष्ट्रीय आरोग्य बीमा योजना (RSBY)",
+    description: "गरीब कुटुंबांसाठी आरोग्य विमा.",
+    eligibility: "BPL कुटुंब",
+    amount: "₹30,000 वार्षिक कवरेज",
+    link: "https://www.india.gov.in/spotlight/ayushman-bharat-national-health-protection-mission",
+    category: "health",
+    guide: [
+      "नजिकच्या आरोग्य केंद्रात जा.",
+      "RSBY कार्ड साठी अर्ज करा.",
+      "BPL कार्ड व आधार द्या."
+    ],
+    documents: ["आधार", "BPL कार्ड", "फोटो"]
+  },
+  {
+    name: "शाळा जाणार नाही तर ज्ञान घरी आणणार (रेडिओ/TV शिक्षण)",
+    description: "दूरदर्शन/रेडिओवर शैक्षणिक कार्यक्रम.",
+    eligibility: "सर्व विद्यार्थी",
+    amount: "मोफत",
+    link: "https://swayamprabha.gov.in/",
+    category: "education",
+    guide: [
+      "Swayam Prabha DTH चॅनल पहा.",
+      "शैक्षणिक कार्यक्रम निवडा.",
+      "अभ्यास करा."
+    ],
+    documents: ["नाही"]
+  },
+  {
+    name: "प्रधानमंत्री वय वंदना योजना (PMVVY)",
+    description: "ज्येष्ठ नागरिकांसाठी पेन्शन योजना (60+).",
+    eligibility: "60 वर्षे व त्यावरील नागरिक",
+    amount: "7.4% वार्षिक परतावा",
+    link: "https://licindia.in/products/pension-plans",
+    category: "financial",
+    beneficiaryTypes: ["senior"],
+    guide: [
+      "LIC शाखेत जा.",
+      "PMVVY योजनेत गुंतवणूक करा.",
+      "वय पुरावा व आधार द्या."
+    ],
+    documents: ["आधार", "वय पुरावा", "बँक तपशील"]
+  },
+  {
+    name: "महाराष्ट्र पोलिस भरती",
+    description: "पोलीस विभागात नोकरी संधी (कॉन्स्टेबल, अधिकारी).",
+    eligibility: "शैक्षणिक पात्रता व शारीरिक तंदुरुस्ती",
+    amount: "पगार (पदानुसार)",
+    link: "https://mahapariksha.gov.in/",
+    category: "education",
+    guide: [
+      "Mahapariksha पोर्टल तपासा.",
+      "पोलीस भरती जाहिरात वाचा.",
+      "ऑनलाइन अर्ज करा व परीक्षेसाठी तयारी करा."
+    ],
+    documents: ["आधार", "शैक्षणिक प्रमाणपत्र", "जात प्रमाणपत्र", "फोटो"]
+  },
+  {
+    name: "कृषी यंत्रसामग्री अनुदान योजना",
+    description: "शेतकऱ्यांना ट्रॅक्टर, पंप इत्यादीसाठी अनुदान.",
+    eligibility: "महाराष्ट्रातील शेतकरी",
+    amount: "40-50% अनुदान",
+    link: "https://krishi.maharashtra.gov.in/",
+    category: "agriculture",
+    guide: [
+      "कृषी विभाग पोर्टल उघडा.",
+      "यंत्रसामग्री अनुदान अर्ज भरा.",
+      "जमीन कागदपत्रे अपलोड करा."
+    ],
+    documents: ["आधार", "7/12 उतारा", "8अ", "बँक पासबुक"]
+  },
+  {
+    name: "महाराष्ट्र शासन छात्रवृत्ती (MahaDBT Portal)",
+    description: "विविध शिष्यवृत्त्या एकाच पोर्टलवर (Pre/Post Matric, EBC, OBC, SC, ST).",
+    eligibility: "विद्यार्थी (विविध श्रेणी)",
+    amount: "Varies",
+    link: "https://mahadbt.maharashtra.gov.in/",
+    category: "education",
+    guide: [
+      "MahaDBT पोर्टल उघडा.",
+      "रजिस्ट्रेशन करा.",
+      "योग्य शिष्यवृत्ती निवडा व अर्ज पूर्ण करा."
+    ],
+    documents: ["आधार", "मार्कशीट", "उत्पन्न प्रमाणपत्र", "जात प्रमाणपत्र", "बँक तपशील"]
+  },
+  {
+    name: "बेटी बचाओ बेटी पढाओ",
+    description: "मुलींच्या शिक्षण व संरक्षणासाठी राष्ट्रीय मोहीम.",
+    eligibility: "सर्व मुली",
+    amount: "जागरूकता + योजना लाभ",
+    link: "https://wcd.nic.in/schemes/beti-bachao-beti-padhao-scheme",
+    category: "women",
+    guide: [
+      "स्थानिक प्रशासनाशी संपर्क करा.",
+      "संबंधित शिष्यवृत्ती/योजनांसाठी अर्ज करा."
+    ],
+    documents: ["जन्म दाखला", "आधार", "शाळा प्रमाणपत्र"]
   }
-  // तुम्ही इथे आणखी items add करू शकता (उदा. 50+ साठी मी पुढे भरून देईन)
 ];
 
 // ========== UI ELEMENTS ==========
@@ -328,7 +825,15 @@ function renderSchemes() {
       const matchesTerm = s.name.toLowerCase().includes(term) || s.description.toLowerCase().includes(term);
       const matchesCategory = (category === "all" || s.category === category);
       const matchesFavorite = !showOnlyFavorites || isFavorite(s.name);
-      return matchesTerm && matchesCategory && matchesFavorite;
+      
+      // Beneficiary type filter
+      let matchesBeneficiary = true;
+      if (currentBeneficiaryType !== 'all') {
+        const beneficiaryTypes = s.beneficiaryTypes || [];
+        matchesBeneficiary = beneficiaryTypes.includes(currentBeneficiaryType);
+      }
+      
+      return matchesTerm && matchesCategory && matchesFavorite && matchesBeneficiary;
     });
     
     // Sort schemes
@@ -370,12 +875,13 @@ function renderSchemes() {
     
     // No results message
     if (filteredSchemes.length === 0) {
+      const t = translations[currentLanguage];
       const noResults = document.createElement('div');
       noResults.style.gridColumn = '1 / -1';
       noResults.style.textAlign = 'center';
       noResults.style.padding = '40px';
       noResults.style.color = '#ff6600';
-      noResults.innerHTML = `<h3>😔 कोणतीही योजना सापडली नाही</h3><p>कृपया दुसरा शोध प्रयत्न करा</p>`;
+      noResults.innerHTML = `<h3>${t.noResults}</h3><p>${t.tryAgain}</p>`;
       schemesGrid.appendChild(noResults);
     } else {
       // upcoming note
@@ -463,9 +969,37 @@ sortBySelect?.addEventListener('change', (e) => {
 showFavoritesBtn?.addEventListener('click', () => {
   showOnlyFavorites = !showOnlyFavorites;
   showFavoritesBtn.classList.toggle('active');
-  showFavoritesBtn.textContent = showOnlyFavorites ? '📋 Show All' : '❤️ Favorites';
+  const t = translations[currentLanguage];
+  showFavoritesBtn.textContent = showOnlyFavorites ? t.showAll : t.showFavorites;
   renderSchemes();
 });
+
+// Language selector
+const languageSelect = document.getElementById('languageSelect');
+languageSelect?.addEventListener('change', (e) => {
+  updateLanguage(e.target.value);
+  renderSchemes();
+});
+
+// Beneficiary type filters
+const beneficiaryBtns = document.querySelectorAll('.beneficiary-btn');
+beneficiaryBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Remove active from all buttons
+    beneficiaryBtns.forEach(b => b.classList.remove('active'));
+    // Add active to clicked button
+    btn.classList.add('active');
+    // Update filter
+    currentBeneficiaryType = btn.dataset.type;
+    renderSchemes();
+  });
+});
+
+// Set initial active beneficiary button
+const initialBeneficiaryBtn = document.querySelector(`[data-type="${currentBeneficiaryType}"]`);
+if (initialBeneficiaryBtn) {
+  initialBeneficiaryBtn.classList.add('active');
+}
 
 // Dark mode toggle
 darkModeToggle?.addEventListener('click', toggleDarkMode);
@@ -534,6 +1068,12 @@ document.addEventListener('keydown', (e) => {
 // ========== INITIALIZATION ==========
 initDarkMode();
 updateStatistics();
+
+// Set initial language
+if (languageSelect) {
+  languageSelect.value = currentLanguage;
+}
+updateLanguage(currentLanguage);
 
 // Service Worker Registration (for PWA)
 if ('serviceWorker' in navigator) {

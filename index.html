@@ -22,14 +22,24 @@
     <span class="icon-sun">☀️</span>
     <span class="icon-moon hidden">🌙</span>
   </button>
+  
+  <!-- Language Selector -->
+  <div class="language-selector">
+    <select id="languageSelect" aria-label="Select Language">
+      <option value="mr">मराठी</option>
+      <option value="hi">हिंदी</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+  
   <div class="header-images">
     <img src="images/aai_jijau.jpg" alt="Rajmata Jijau Saheb">
     <img src="images/shivaji.jpg" alt="Chhatrapati Shivaji Maharaj">
     <img src="images/sambhaji.jpg" alt="Chhatrapati Sambhaji Maharaj">
     <img src="images/manoj_patil.jpg" alt="Manoj Jarange Patil">
   </div>
-  <h1>मराठा योजना मार्गदर्शक</h1>
-  <p class="website-description">
+  <h1 id="headerTitle">मराठा योजना मार्गदर्शक</h1>
+  <p class="website-description" id="headerDescription">
      येथे तुम्हाला शिक्षण, आर्थिक, आरोग्य, महिला, शेती अशा विविध सरकारी योजनांची माहिती, अर्ज प्रक्रिया आणि थेट अर्ज करण्याच्या लिंकसह मिळेल.
   </p>
 </header>
@@ -39,34 +49,44 @@
   <section class="stats-section">
     <div class="stat-card">
       <span class="stat-number" id="totalSchemes">0</span>
-      <span class="stat-label">एकूण योजना</span>
+      <span class="stat-label" id="statLabel1">एकूण योजना</span>
     </div>
     <div class="stat-card">
       <span class="stat-number" id="totalCategories">6</span>
-      <span class="stat-label">श्रेणी</span>
+      <span class="stat-label" id="statLabel2">श्रेणी</span>
     </div>
     <div class="stat-card">
       <span class="stat-number" id="favoriteCount">0</span>
-      <span class="stat-label">Favorites ❤️</span>
+      <span class="stat-label" id="statLabel3">Favorites ❤️</span>
     </div>
+  </section>
+
+  <!-- Beneficiary Type Filters -->
+  <section class="beneficiary-filters">
+    <button class="beneficiary-btn" data-type="all" id="beneficiaryAll">🌐 सर्व</button>
+    <button class="beneficiary-btn" data-type="student" id="beneficiaryStudent">🎓 विद्यार्थी</button>
+    <button class="beneficiary-btn" data-type="farmer" id="beneficiaryFarmer">🌾 शेतकरी</button>
+    <button class="beneficiary-btn" data-type="women" id="beneficiaryWomen">👩 महिला</button>
+    <button class="beneficiary-btn" data-type="youth" id="beneficiaryYouth">💼 युवा</button>
+    <button class="beneficiary-btn" data-type="senior" id="beneficiarySenior">👴 ज्येष्ठ नागरिक</button>
   </section>
 
   <section class="search-bar">
     <input id="searchInput" type="text" placeholder="योजना शोधा — शिक्षण, कर्ज, महिला, आरोग्य" aria-label="Search schemes"/>
     <select id="filterCategory" aria-label="Filter by category">
-      <option value="all">सर्व श्रेणी</option>
-      <option value="education">शिक्षण</option>
-      <option value="financial">आर्थिक</option>
-      <option value="health">आरोग्य</option>
-      <option value="agriculture">शेती</option>
-      <option value="women">महिला</option>
-      <option value="housing">घरकुल</option>
+      <option value="all" id="catAll">सर्व श्रेणी</option>
+      <option value="education" id="catEducation">शिक्षण</option>
+      <option value="financial" id="catFinancial">आर्थिक</option>
+      <option value="health" id="catHealth">आरोग्य</option>
+      <option value="agriculture" id="catAgriculture">शेती</option>
+      <option value="women" id="catWomen">महिला</option>
+      <option value="housing" id="catHousing">घरकुल</option>
     </select>
     <select id="sortBy" aria-label="Sort schemes">
-      <option value="default">क्रमवारी: Default</option>
-      <option value="name-asc">नाव (A-Z)</option>
-      <option value="name-desc">नाव (Z-A)</option>
-      <option value="category">श्रेणी</option>
+      <option value="default" id="sortDefault">क्रमवारी: Default</option>
+      <option value="name-asc" id="sortNameAsc">नाव (A-Z)</option>
+      <option value="name-desc" id="sortNameDesc">नाव (Z-A)</option>
+      <option value="category" id="sortCategory">श्रेणी</option>
     </select>
     <button id="showFavoritesBtn" class="filter-btn" aria-label="Show favorites" title="Show Favorites Only">
       ❤️ Favorites
@@ -89,8 +109,28 @@
 </button>
 
 <footer>
-  <p>© 2025 Maratha Yojna Margdarshak | जय भवानी जय शिवाजी 🚩</p>
-  <p class="credit">💻 Developed by <span class="dev-name">Parth Ashokrao Hoke Patil</span></p>
+  <p id="footerText1">© 2025 Maratha Yojna Margdarshak | जय भवानी जय शिवाजी 🚩</p>
+  <p class="credit" id="footerText2">💻 Developed by <span class="dev-name">Parth Ashokrao Hoke Patil</span></p>
+  
+  <!-- Helpline Section -->
+  <div class="helpline-section">
+    <h3 id="helplineTitle">📞 महत्त्वाचे हेल्पलाईन नंबर</h3>
+    <div class="helpline-grid">
+      <div class="helpline-item">
+        <strong>MahaDBT:</strong> <a href="tel:18002339339">1800-233-9339</a>
+      </div>
+      <div class="helpline-item">
+        <strong>PM-KISAN:</strong> <a href="tel:18001155266">1800-115-5266</a>
+      </div>
+      <div class="helpline-item">
+        <strong>Ayushman Bharat:</strong> <a href="tel:14555">14555</a>
+      </div>
+      <div class="helpline-item">
+        <strong>NSP:</strong> <a href="tel:01203553508">0120-3553508</a>
+      </div>
+    </div>
+  </div>
+  
   <div class="footer-links">
     <a href="#" id="installBtn" class="install-btn hidden">📱 Install App</a>
   </div>
